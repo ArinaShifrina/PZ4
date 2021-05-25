@@ -83,7 +83,20 @@ if __name__ == '__main__':
     Ez = numpy.zeros(maxSize)
     Hy = numpy.zeros(maxSize - 1)
 
-    source = GaussianDiff(30.0, 10.0, eps[sourcePos], mu[sourcePos])
+    # Параметры излучаемого сигнала
+    Amax = 100      # уровень ослабления спектра сигнала на частоте Fmax
+                    # и ослабление в момент времени t=0
+    Fmax = 4e9      # максимальная частота в спектре сигнала
+
+    wg = numpy.sqrt(numpy.log(5.5 * Amax)) / (numpy.pi * Fmax)
+    dg = wg * numpy.sqrt(numpy.log(2.5 * Amax * numpy.sqrt(numpy.log(2.5 * Amax))))
+
+    wg = wg / dt
+    dg = dg / dt
+
+    dg1 = 30        # дополнительная задержка
+
+    source = GaussianDiff(dg + dg1, wg, eps[sourcePos], mu[sourcePos])
 
     # Коэффициенты для расчета ABC второй степени
     # Sc' для левой границы
@@ -182,7 +195,7 @@ if __name__ == '__main__':
     
     # Построение падающего и отраженного спектров и
     # зависимости коэффициента отражения от частоты
-    xMax = 7e9
+    xMax = 5e9
     Fmin = 1e9
     Fmax = 4e9
     tools.FallAndScatteredSpectrum(probes, maxTime, dt, xMax, Fmin, Fmax)

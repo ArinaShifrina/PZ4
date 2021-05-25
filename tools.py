@@ -158,7 +158,11 @@ def showProbeSignals(probes: List[Probe], minYSize: float, maxYSize: float,
 
     # Вывод сигналов в окно
     for probe in probes:
-        ax.plot(t, probe.E)
+        if probe == probes[1]:
+            probes[1].E[200:] = 0
+            ax.plot(t, probe.E)
+        else:
+            ax.plot(t, probe.E)
 
     # Создание и отображение легенды на графике
     legend = ['Probe x = {}'.format(probe.position) for probe in probes]
@@ -195,11 +199,11 @@ def FallAndScatteredSpectrum(probes: List[Probe], maxTime:int, dt: float,
     # Построение графиков
     fig, ax = pylab.subplots()
     ax.plot(f, fall_spectrum / numpy.max(fall_spectrum))
-    ax.plot(f, scattered_spectrum / numpy.max(scattered_spectrum))
+    ax.plot(f, scattered_spectrum / numpy.max(fall_spectrum))
     ax.grid()
     ax.set_xlim(0, xMax)
     ax.set_xlabel('f, Гц')
-    ax.set_ylabel(r'$\frac{S}{S_max}}$')
+    ax.set_ylabel(r'$\frac{S}{S_max}$')
     ax.legend(['Спектр пад. сигнала','Спектр отр. сигнала'], loc=1)
     pylab.show()
 
